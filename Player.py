@@ -1,3 +1,4 @@
+
 class player: 
     
     def __init__(self,number) -> None:
@@ -8,6 +9,11 @@ class player:
     def rename(self, new_name):
         self.name = new_name
         
-    
+    def define_revenu(self, new_revenu):
+        self.revenu = new_revenu 
+        
+    def define_time(self,new_time):
+        self.time = new_time
+        
         
         
