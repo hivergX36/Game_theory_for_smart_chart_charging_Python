@@ -5,11 +5,11 @@ model_aggregator = AbstractModel()
 model_aggregator.quantity = Var(within = PositiveReals)
 model_aggregator.min_quantity = Param(within = PositiveReals)
 model_aggregator.max_quantity = Param(within = PositiveReals)
-model_aggregator_agent_demand_set = Set()
-
+model_aggregator.agent_demand_set = Set()
+model_aggregator.agent_demand = Param(model_aggregator.agent_demand_set, within = PositiveReals)
 #define objective function 
 
-def objective_rule(model_player):
+def objective_rule(model_aggregator):
     return model_aggregator.quantity
 
 model_aggregator.value =  Objective( rule=objective_rule, sense=minimize)
@@ -19,27 +19,17 @@ model_aggregator.value =  Objective( rule=objective_rule, sense=minimize)
 def constraint_sup_quantity_rule(model_aggregator):
     return model_aggregator.quantity  <= model_aggregator.max_quantity
 
+model_aggregator.constraint_sup_quantity = Constraint(rule = constraint_sup_quantity_rule)
+
 
 def constraint_inf_quantity_rule(model_aggregator):
     return model_aggregator.quantity  >= model_aggregator.min_quantity
 
+model_aggregator.constraint_inf_quantity = Constraint(rule = constraint_inf_quantity_rule)
 
-model_player.revenue_const = Constraint(rule=revenue_rule)
+def constraint_demand_quantity_rule(model_aggregator):
+    return model_aggregator.quantity >= sum(model_aggregator.agent_demand[i] for i in model_aggregator.agent_demand_set) 
 
-#define data
-
-data = {None: {
-    'revenue': {None:8},
-    'price': {None:5},
-}}
-
-#Example on an instance 
-
-instance = model_player.create_instance(data)
-instance.pprint()
+model_aggregator.constraint_quantity_distributed = Constraint(rule = constraint_demand_quantity_rule)
 
 
-results = SolverFactory('glpk').solve(instance)
-results.write()
-if results.solver.status:
-    instance.pprint()

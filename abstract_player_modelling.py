@@ -21,20 +21,3 @@ def revenue_rule(model_player):
 
 model_player.revenue_const = Constraint(rule=revenue_rule)
 
-#define data
-
-data = {None: {
-    'revenue': {None:8},
-    'price': {None:5},
-}}
-
-#Example on an instance 
-
-instance = model_player.create_instance(data)
-instance.pprint()
-
-
-results = SolverFactory('glpk').solve(instance)
-results.write()
-if results.solver.status:
-    instance.pprint()
