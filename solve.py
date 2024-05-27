@@ -1,6 +1,6 @@
 from pyomo.environ import *
-from abstract_aggretgator_modelling import *
-from abstract_player_modelling import *
+from Abstract_aggretgator_modelling import *
+from Abstract_player_modelling import *
 
 
 #define data
