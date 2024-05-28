@@ -82,8 +82,8 @@ class controler:
         print("time_list", self.time_list)
         self.revenu_list = self.checknumber(lines,5)
         print("revenu_list", self.revenu_list)
-        self.quantity_list = self.checknumber(lines,7)
-        print (self.quantity_list)
+        self.aggregator_quantity = self.checknumber(lines,7)
+        print (self.aggregator_quantity)
         self.nb_player = len(self.revenu_list)
         
     def return_agent_data(self,players:list[player],aggregator:aggregator):
@@ -91,12 +91,21 @@ class controler:
         aggregator.price = self.aggregator_price
         aggregator.Qmin = self.aggregator_quantity[0]
         aggregator.Qmax = self.aggregator_quantity[1]
-        data_aggregator = {None: {'min_quantity': {None:1},'max_quantity': {None:100},'agent_demand_set':{None:[i for i in range(length)]},'agent_demand':{1:10,2:9,3:15},
+        aggregator.instance = {None: {'min_quantity': {None: aggregator.Qmin},'max_quantity': {None:aggregator.Qmax },'agent_demand_set':{None:[i for i in range(length)]},'agent_demand':0,
 }}
         for i in range(length):
             players[i].time = self.time_list[i]
             players[i].revenu = self.revenu_list[i]
             players[i].instance  = {None: {'revenue': {None:self.revenu_list[i]},'price': {None:self.aggregator_price}}}
+
+        
+    
+    def modify_aggregator_instances(self, players:list[player], aggregator:aggregator):
+          data_agent = {i:players[i].demand for i in range(len(players))}
+          print("a", data_agent)
+          aggregator.instance = {None: {'min_quantity': {None:1},'max_quantity': {None:100},'agent_demand_set':{None:[i for i in range(len(players))]},'agent_demand':data_agent,
+
+}}
 
         
      
@@ -107,3 +116,4 @@ class controler:
     def return_player_solution(self,players:list[player],demand,compteur):
         players[compteur].demand = demand        
         
+   
