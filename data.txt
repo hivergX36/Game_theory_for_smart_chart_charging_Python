@@ -1,6 +1,6 @@
-number_agent: 
+price: 
 
-10,
+1.2,
 
 time: 
 
@@ -10,6 +10,6 @@ revenu:
 
 10,10,10,10,10,10,10,10,10,10,
 
-quanity:
+quantity:
 
 0,100,

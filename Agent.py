@@ -61,7 +61,7 @@ class controler:
               while(lignes[indice][compteur2] != ","):
                     compteur2 += 1
               print(lignes[indice][compteur1:compteur2])
-              ParsedList.append(int(lignes[indice][compteur1:compteur2]))
+              ParsedList.append(float(lignes[indice][compteur1:compteur2]))
               compteur1 = compteur2 + 1
               compteur2 = compteur1
 
@@ -96,7 +96,7 @@ class controler:
         for i in range(length):
             players[i].time = self.time_list[i]
             players[i].revenu = self.revenu_list[i]
-            players[i].instance  = {None: {'revenue': {None:self.revenu_list[i]},'price': {None:self.aggregator_price}}}
+            players[i].instance  = {None: {'revenue': {None:self.revenu_list[i]},'price': {None:1.2}}}
 
         
     
