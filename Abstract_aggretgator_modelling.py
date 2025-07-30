@@ -1,7 +1,6 @@
 from pyomo.environ import *
 
 model_aggregator = AbstractModel() 
-
 model_aggregator.quantity = Var(within = PositiveReals)
 model_aggregator.min_quantity = Param(within = PositiveReals)
 model_aggregator.max_quantity = Param(within = PositiveReals)
