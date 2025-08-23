@@ -17,7 +17,7 @@ class Player_astract_model:
         
         
         def objective_rule(model_player):
-            return  - model_player.demand
+            return model_player.demand
         
         self.model.objective = Objective(rule=objective_rule, sense=minimize)
 
