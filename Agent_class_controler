@@ -72,6 +72,6 @@ class controler:
         aggregator.quantity_distributed = quantity 
         
     def return_player_solution(self,players:list[player],demand,compteur):
-        players[compteur].demand = demand        
+        players[compteur].demand = demand 
         
    

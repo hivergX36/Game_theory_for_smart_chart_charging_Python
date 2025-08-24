@@ -1,5 +1,10 @@
 class aggregator:
     
+    """_summary_
+    This class represents an aggregator in the smart charging system.
+    This the pyomo abstract model of the aggregator 
+    """
+    
     def __init__(self) -> None:
         self.quantity_distributed = 0 
         self.Qmax = 0 
