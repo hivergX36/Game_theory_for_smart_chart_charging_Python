@@ -4,44 +4,57 @@ from pyomo.environ import *
 
 class Player_abstract_model: 
     """
-    Abstract class for player modelling in a game.
-    This class defines the basic structure and variables for a player model.
+    Abstract model for a game with multiple players.
+    Each player has a price and a revenue.
     """
 
     def __init__(self):
-        
+        # Create the abstract model
         self.model = AbstractModel()
-        self.model.demand = Var(within=PositiveReals)
-        self.revenue = Param(within=PositiveReals)
-        self.price = Param(within=PositiveReals)
+
+        # Define the sets
+        self.model.players = Set()  # Set of players
+
+        # Define the parameters for price and revenue for each player
+        self.model.price = Param(self.model.players, within=PositiveReals)
+        self.model.revenue = Param(self.model.players, within=PositiveReals)
+        self.model.time = Param(self.model.players, within=PositiveReals)
+
+        # Define the decision variables for demand, indexed by players
+        self.model.demand = Var(self.model.players, within=NonNegativeReals)
         
-        
-        def objective_rule(model_player):
-            return model_player.demand
-        
+                # Define the objective: maximize total demand across all players
+        def objective_rule(model):
+            return sum(model.demand[p] for p in model.players)
+
         self.model.objective = Objective(rule=objective_rule, sense=maximize)
 
-        #Define revenue constraint
-        def revenue_rule(model_player):
-            return model_player.price * model_player.demand  <= model_player.revenue
+        # Define the revenue constraint: demand * price should be less than or equal to revenue
+        def revenue_rule(model, p):
+            return model.demand[p] * model.price[p] <= model.revenue[p]
 
-        self.model.revenue_const = Constraint(rule=revenue_rule)
+        self.model.revenue_constraint = Constraint(self.model.players, rule=revenue_rule)
+
+
+
         
     def run_model(self, data):
         
-        self.model.price = Param(initialize=data['price'], within=PositiveReals)
-        self.model.revenue = Param(initialize=data['revenue'], within=PositiveReals)
-        self.model.pprint()
         instance = self.model.create_instance(data)
+        instance.pprint()
+
+
+        # Solver setup (GLPK is used here)
         solver = SolverFactory('glpk')
+
+        # Solve the model
         solver.solve(instance)
-        print(f"Results for the Player:")
-        print(f"Demand: {instance.demand.value}")
-        print(f"Price: {instance.price.value}")
-        print(f"Revenue: {instance.revenue.value}")
+        print("Results for each player:")
+        for player in instance.players:
+            print(f"Player {player}:")
+            print(f"  Demand: {instance.demand[player].value}")
+            print(f"  Price: {instance.price[player]}")
+            print(f"  Revenue: {instance.revenue[player]}")
+            print("-------------------------")
 
       
-
-
-
-

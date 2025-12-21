@@ -1,4 +1,4 @@
-
+import re 
 class controler:
     
     def __init__(self) -> None:
@@ -28,50 +28,39 @@ class controler:
                     break
         return ParsedList
         
-    def read_data(self,text):
-        fichier = open(text, "r",encoding="utf8")
+    def read_data_controler(self,text):
+        index_word = 0
+        dictionnary_word = ["a1x^2", "b1x", "c1", "a2x^2", "b2x", "c2"]
+        fichier = open(text, "r", encoding="utf8")
         lines = fichier.readlines()
         lines = [lines[i] for i in range(len(lines)) if lines[i] != "\n"]
-        lines = [ re.sub("\n", "", lines[i]) for i in range(len(lines))]
+        lines = [re.sub("\n", "", lines[i]) for i in range(len(lines))]
+        lines = [re.sub(":", "", lines[i]) for i in range(len(lines))]
+        for w in dictionnary_word:
+            for i in range(len(lines)):
+                if w in lines[i]:
+                    index_word = i + 1
+                    self.primal[w] = float(lines[index_word])
         print("lines: ", lines)
-        self.aggregator_price = self.checknumber(lines,1)[0]
-        print("price: ", self.aggregator_price)
-        self.time_list = self.checknumber(lines,3)
-        print("time_list", self.time_list)
-        self.revenu_list = self.checknumber(lines,5)
-        print("revenu_list", self.revenu_list)
-        self.aggregator_quantity = self.checknumber(lines,7)
-        print (self.aggregator_quantity)
-        self.nb_player = len(self.revenu_list)
         
-    def return_agent_data(self,players:list[player],aggregator:aggregator):
-        length = len(players)
-        aggregator.price = self.aggregator_price
-        aggregator.Qmin = self.aggregator_quantity[0]
-        aggregator.Qmax = self.aggregator_quantity[1]
-        aggregator.instance = {None: {'min_quantity': {None: aggregator.Qmin},'max_quantity': {None:aggregator.Qmax },'agent_demand_set':{None:[i for i in range(length)]},'agent_demand':0,
-}}
-        for i in range(length):
-            players[i].time = self.time_list[i]
-            players[i].revenu = self.revenu_list[i]
-            players[i].instance  = {None: {'revenue': {None:self.revenu_list[i]},'price': {None:1.2}}}
-
         
-    
-    def modify_aggregator_instances(self, players:list[player], aggregator:aggregator):
-          data_agent = {i:players[i].demand for i in range(len(players))}
-          print("a", data_agent)
-          aggregator.instance = {None: {'min_quantity': {None:1},'max_quantity': {None:100},'agent_demand_set':{None:[i for i in range(len(players))]},'agent_demand':data_agent,
-
-}}
+        def read_data_player(self,text):
+            index_word = 0
+            dictionnary_word = ["a1x^2", "b1x", "c1", "a2x^2", "b2x", "c2"]
+            fichier = open(text, "r", encoding="utf8")
+            lines = fichier.readlines()
+            lines = [lines[i] for i in range(len(lines)) if lines[i] != "\n"]
+            lines = [re.sub("\n", "", lines[i]) for i in range(len(lines))]
+            lines = [re.sub(":", "", lines[i]) for i in range(len(lines))]
+            for w in dictionnary_word:
+                for i in range(len(lines)):
+                    if w in lines[i]:
+                        index_word = i + 1
+                        self.primal[w] = float(lines[index_word])
+            print("lines: ", lines) 
 
         
      
     
-    def return_aggregator_solution(self,aggregator:aggregator, quantity): 
-        aggregator.quantity_distributed = quantity 
-        
-    def return_player_solution(self,players:list[player],demand,compteur):
-        players[compteur].demand = demand 
-        
+
    
