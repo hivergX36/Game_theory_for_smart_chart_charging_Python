@@ -3,7 +3,7 @@ import re
 
 class player: 
     
-    def __init__(self,number) -> None:
+    def __init__(self, number: int) -> None:
         self.name = "player_" + str(number)
         self.program = {
             "a1x^2": 0,
@@ -16,4 +16,4 @@ class player:
         }
 
     def display_program(self):
-        return self.program
+        print(self.program)
