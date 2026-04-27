@@ -11,7 +11,7 @@ class controler:
 
     def read_data_player(self, text: str):
         index_word = 0
-        dictionnary_word = ["a1x^2", "b1x", "c1", "a2x^2", "b2x", "c2"]
+        dictionnary_word = ["d1", "lambda_f", "r", "revenue", "min_demand", "max_demand", "sum_demand", "quantity", 'sum_another_demand']
         fichier = open(text, "r", encoding="utf8")
         lines = fichier.readlines()
         lines = [lines[i] for i in range(len(lines)) if lines[i] != "\n"]
@@ -30,7 +30,7 @@ class controler:
 
     def read_data_aggregator(self, text: str):
         index_word = 0
-        dictionnary_word = ["a1x^2", "b1x", "c1", "a2x^2", "b2x", "c2"]
+        dictionnary_word = [ "d1", "lambda_f", "r", "revenue", "min_demand", "max_demand", "sum_demand", "quantity", 'sum_another_demand']
         fichier = open(text, "r", encoding="utf8")
         lines = fichier.readlines()
         lines = [lines[i] for i in range(len(lines)) if lines[i] != "\n"]
