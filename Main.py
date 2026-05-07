@@ -10,5 +10,5 @@ game_controller = controler(number_of_agent=10)
 game_controller.read_data_player("data_player.txt")
 game_controller.read_data_aggregator("data_aggregator.txt")
 
-# Print agent programs by the controler 
+# Print agent programs by the controler
 game_controller.print_controler()

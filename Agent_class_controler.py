@@ -5,13 +5,22 @@ from Agent_class_aggregator import aggregator
 
 class controler:
 
-    def __init__(self, number_of_agent: int) -> None:
+    def __init__(self, number_of_agent: int):
         self.agent_list = [player(i) for i in range(number_of_agent)]
         self.aggregator = aggregator()
 
     def read_data_player(self, text: str):
         index_word = 0
-        dictionnary_word = ["d1", "lambda_f", "r", "revenue", "min_demand", "max_demand", "sum_demand", "quantity", 'sum_another_demand']
+        dictionnary_word = [
+            "d1",
+            "lambda_f",
+            "r",
+            "revenue",
+            "max_demand",
+            "sum_demand_type_1",
+            "sum_demand_type_2",
+            "Q",
+        ]
         fichier = open(text, "r", encoding="utf8")
         lines = fichier.readlines()
         lines = [lines[i] for i in range(len(lines)) if lines[i] != "\n"]
@@ -30,7 +39,14 @@ class controler:
 
     def read_data_aggregator(self, text: str):
         index_word = 0
-        dictionnary_word = [ "d1", "lambda_f", "r", "revenue", "min_demand", "max_demand", "sum_demand", "quantity", 'sum_another_demand']
+        dictionnary_word = [
+            "Max_Q",
+            "Min_Q",
+            "lambda_f",
+            "revenue",
+            "sum_demand",
+            "Q",
+        ]
         fichier = open(text, "r", encoding="utf8")
         lines = fichier.readlines()
         lines = [lines[i] for i in range(len(lines)) if lines[i] != "\n"]
@@ -47,6 +63,9 @@ class controler:
     def print_controler(self):
         for agent in self.agent_list:
             print("Agent Name: ", agent.name)
-            print("Agent Program: ", agent.program)
+            print("Agent variables: ", agent.display_variables())
+            print("Agent Program: ", agent.display_agent_programs())
             print("-----------------------")
-        print("Aggregator Instance: ", self.aggregator.instance)
+        print("Aggregator variables: ", self.aggregator.display_aggregator_variables())
+        print("-----------------------")
+        print("Aggregator programs: ", self.aggregator.display_aggregator_programs())
