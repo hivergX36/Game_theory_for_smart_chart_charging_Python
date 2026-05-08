@@ -7,6 +7,19 @@ class Player_abstract_model:
     Each player has a price and a revenue.
     """
 
+    """ print("Agent name: ", self.name)
+        print("Agent program: ")
+        print("Agent type: ", self.program["type"])
+        print("max d1")
+        print("subject to: ", "lambda_f1 * d1 <= " + str(self.program["revenue"]))
+        print("d1 <= " + str(self.program["max_demand"]))
+        if self.program["type"] == 1:
+            print("sum_demand_type_1 + 1/t <= " + "Q")
+        else:
+            print("sum_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
+
+    """
+
     def __init__(self):
         # Create the abstract model
         self.model = AbstractModel()
@@ -15,9 +28,10 @@ class Player_abstract_model:
         self.model.players = Set()  # Set of players
 
         # Define the parameters for price and revenue for each player
-        self.model.price = Param(self.model.players, within=PositiveReals)
-        self.model.revenue = Param(self.model.players, within=PositiveReals)
-        self.model.time = Param(self.model.players, within=PositiveReals)
+        self.model.price = Param(within=PositiveReals)
+        self.model.revenue = Param(within=PositiveReals)
+        self.model.debit_time = Param(within=PositiveReals)
+        self.model.provider_quantity = Param(within=PositiveReals)
 
         # Define the decision variables for demand, indexed by players
         self.model.demand = Var(self.model.players, within=NonNegativeReals)
