@@ -3,7 +3,9 @@ import re
 
 class player_type_2:
 
-    def __init__(self, number: int):
+    def __init__(
+        self, number: int, number_of_agent_type_1: int, number_of_agent_type_2: int
+    ):
         self.name = "player_" + str(number)
         self.variables = {
             "d1": 0,
@@ -12,9 +14,9 @@ class player_type_2:
             "Q": 0,
             "revenue": 0,
             "max_demand": 0,
-            "d_type_1": [0 for i in range(number)],
+            "d_type_1": [0 for i in range(number_of_agent_type_1)],
             "sum_demand_type_1": 0,
-            "d_type_2": [0 for i in range(number)],
+            "d_type_2": [0 for i in range(number_of_agent_type_2)],
             "sum_demand_type_2": 0,
             "quantity_given_aggregator": 0,
             "t": 1,
@@ -44,6 +46,7 @@ class player_type_2:
                 "lambda_p": {None: self.variables["lambda_p"]},
                 "Q": {None: self.variables["Q"]},
                 "r ": {None: self.variables["r"]},
+                "t": {None: self.variables["t"]},
                 "d_type_1": {
                     i: self.variables["d_type_1"][i]
                     for i in range(len(self.variables["d_type_1"]))

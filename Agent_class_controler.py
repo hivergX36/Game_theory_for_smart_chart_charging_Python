@@ -8,10 +8,12 @@ class controler:
 
     def __init__(self, number_of_agent_type_1: int, number_of_agent_type_2: int):
         self.agent_list_type_1 = [
-            player_type_1(i) for i in range(number_of_agent_type_1)
+            player_type_1(i, number_of_agent_type_1)
+            for i in range(number_of_agent_type_1)
         ]
         self.agent_list_type_2 = [
-            player_type_2(i) for i in range(number_of_agent_type_2)
+            player_type_2(i, number_of_agent_type_1, number_of_agent_type_2)
+            for i in range(number_of_agent_type_2)
         ]
         self.aggregator = aggregator()
 

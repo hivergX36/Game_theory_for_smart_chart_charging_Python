@@ -25,30 +25,28 @@ class Player_abstract_model_type_1:
         self.model = AbstractModel()
 
         # Define the sets
-        self.model.players = Set()  # Set of players
 
         # Define the parameters for price and revenue for each player
-        self.model.price = Param(within=PositiveReals)
+        self.model.lambda_p = Param(within=PositiveReals)
         self.model.r = Param(within=PositiveReals)
-        self.model.debit_time = Param(within=PositiveReals)
-        self.model.provider_quantity = Param(within=PositiveReals)
+        self.model.Q = Param(within=PositiveReals)
+        self.model.sum_demand_type_type_1 = Param(within=PositiveReals)
+        self.model.t = Param(within=PositiveReals)
 
         # Define the decision variables for demand, indexed by players
-        self.model.demand = Var(self.model.players, within=NonNegativeReals)
+        self.model.d1 = Var(within=NonNegativeReals)
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return sum(model.demand[p] for p in model.players)
+            return sum(model.d1)
 
         self.model.objective = Objective(rule=objective_rule, sense=maximize)
 
         # Define the revenue constraint: demand * price should be less than or equal to revenue
         def revenue_rule(model, p):
-            return model.demand[p] * model.price[p] <= model.revenue[p]
+            return model.d1 * model.lambda_p <= model.Q
 
-        self.model.revenue_constraint = Constraint(
-            self.model.players, rule=revenue_rule
-        )
+        self.model.revenue_constraint = Constraint(rule=revenue_rule)
 
     def run_model(self, data):
 
@@ -60,10 +58,5 @@ class Player_abstract_model_type_1:
 
         # Solve the model
         solver.solve(instance)
-        print("Results for each player:")
-        for player in instance.players:
-            print(f"Player {player}:")
-            print(f"  Demand: {instance.demand[player].value}")
-            print(f"  Price: {instance.price[player]}")
-            print(f"  Revenue: {instance.revenue[player]}")
-            print("-------------------------")
+        print("Results for Player 1:")
+        instance.demand.pprint()

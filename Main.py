@@ -17,3 +17,6 @@ game_controller.read_data_aggregator("data_aggregator.txt")
 game_controller.print_controler()
 game_controller.make_instance()
 game_controller.print_instance()
+
+model_type_1 = Player_abstract_model_type_1()
+model_type_1.run_model(game_controller.agent_list_type_1[0].instance)
