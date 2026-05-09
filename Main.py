@@ -1,6 +1,6 @@
 from Agent_class_aggregator import aggregator
-from Agent_class_player import player
-from Abstract_player_modelling import Player_abstract_model
+from Agent_class_player_type_1 import player
+from Abstract_player_modelling_type_1 import Player_abstract_model
 from Agent_class_controler import controler
 
 # Sample data for players, prices, and revenues

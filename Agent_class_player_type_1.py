@@ -1,25 +1,24 @@
 import re
 
 
-class player:
+class player_type_1:
 
     def __init__(self, number: int):
         self.name = "player_" + str(number)
         self.program = {
             "d1": 0,
-            "lambda_f": 0,
+            "lambda_p": 0,
             "r": 0,
             "Q": 0,
             "revenue": 0,
             "max_demand": 0,
-            "demand_type_1": [0 for i in range(number)],
-            "demand_type_2": [0 for i in range(number)],
+            "d_type_1": [0 for i in range(number)],
             "sum_demand_type_1": 0,
-            "sum_demand_type_2": 0,
             "quantity_given_aggregator": 0,
             "t": 1,
             "type": 0,
         }
+        self.instance = {}
 
     def display_variables(self):
         print(self.program)
@@ -35,3 +34,21 @@ class player:
             print("sum_demand_type_1 + 1/t <= " + "Q")
         else:
             print("sum_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
+
+    def make_instance(self):
+        self.instance = {
+            self.name: {
+                "r": {None: self.program["r"]},
+                "lambda_p": {None: self.program["lambda_p"]},
+                "Q": {None: self.program["Q"]},
+                "r ": {None: self.program["r "]},
+                "d_type_1": {
+                    i: self.program["d_type_1"][i]
+                    for i in range(len(self.program["d_type_1"]))
+                },
+                "sum_demand_type_1": {None: self.program["sum_demand_type_1"]},
+            }
+        }
+
+    def print_instance(self):
+        print(self.instance)

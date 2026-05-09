@@ -1,7 +1,7 @@
 from pyomo.environ import *
 
 
-class Player_abstract_model_type_1:
+class Player_abstract_model_type_2:
     """
     Abstract model for a game with multiple players.
     Each player has a price and a revenue.
