@@ -9,6 +9,9 @@ class aggregator:
             "Q": 0,
             "Max_Q": 0,
             "Min_Q": 0,
+            "Sum_demand_type_1": 0,
+            "Sum_demand_type_2": 0,
+            "Sum_demand": 0,
         }
         self.instance = {}
 
@@ -23,9 +26,11 @@ class aggregator:
 
     def make_instance(self):
         self.instance = {
-            "Q": {None: self.variables["Q"]},
-            "Max_Q": {None: self.variables["Max_Q"]},
-            "Min_Q": {None: self.variables["Min_Q"]},
+            None: {
+                "Q": {None: self.variables["Q"]},
+                "Max_Q": {None: self.variables["Max_Q"]},
+                "Min_Q": {None: self.variables["Min_Q"]},
+            }
         }
 
     def print_instance(self):

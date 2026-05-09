@@ -7,7 +7,8 @@ class Player_abstract_model_type_2:
     Each player has a price and a revenue.
     """
 
-    """ print("Agent name: ", self.name)
+    """
+    print("Agent name: ", self.name)
         print("Agent program: ")
         print("Agent type: ", self.program["type"])
         print("max d1")
@@ -25,45 +26,46 @@ class Player_abstract_model_type_2:
         self.model = AbstractModel()
 
         # Define the sets
-        self.model.players = Set()  # Set of players
 
         # Define the parameters for price and revenue for each player
-        self.model.price = Param(within=PositiveReals)
+        self.model.lambda_p = Param(within=PositiveReals)
         self.model.r = Param(within=PositiveReals)
-        self.model.debit_time = Param(within=PositiveReals)
-        self.model.provider_quantity = Param(within=PositiveReals)
+        self.model.Q = Param(within=PositiveReals)
+        self.model.sum_another_demand_type_1 = Param(within=PositiveReals)
+        self.model.sum_another_demand_type_2 = Param(within=PositiveReals)
+        self.model.t = Param(within=PositiveReals)
 
         # Define the decision variables for demand, indexed by players
-        self.model.demand = Var(self.model.players, within=NonNegativeReals)
+        self.model.d1 = Var(within=NonNegativeReals)
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return sum(model.demand[p] for p in model.players)
+            return model.d1
 
         self.model.objective = Objective(rule=objective_rule, sense=maximize)
 
         # Define the revenue constraint: demand * price should be less than or equal to revenue
         def revenue_rule(model, p):
-            return model.demand[p] * model.price[p] <= model.revenue[p]
+            return model.d1 * model.lambda_p <= model.r
 
-        self.model.revenue_constraint = Constraint(
-            self.model.players, rule=revenue_rule
-        )
+        self.model.revenue_constraint = Constraint(rule=revenue_rule)
 
-    def run_model(self, data):
+        def model_time_constraint(model):
+            return (
+                model.sum_another_demand_type_1
+                + model.sum_another_demand_type_2
+                + 1 / model.t
+                <= model.Q
+            )
 
-        instance = self.model.create_instance(data)
-        instance.pprint()
+        self.model.time_constraint = Constraint(rule=model_time_constraint)
 
-        # Solver setup (GLPK is used here)
-        solver = SolverFactory("glpk")
-
-        # Solve the model
-        solver.solve(instance)
-        print("Results for each player:")
-        for player in instance.players:
-            print(f"Player {player}:")
-            print(f"  Demand: {instance.demand[player].value}")
-            print(f"  Price: {instance.price[player]}")
-            print(f"  Revenue: {instance.revenue[player]}")
-            print("-------------------------")
+        def run_model(self, data):
+            instance = self.model.create_instance(data)
+            instance.pprint()
+            # Solver setup (GLPK is used here)
+            solver = SolverFactory("glpk")
+            # Solve the model
+            solver.solve(instance)
+            print("Results for Player 2:")
+            instance.d1.pprint()

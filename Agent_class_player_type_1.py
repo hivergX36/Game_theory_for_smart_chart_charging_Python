@@ -7,13 +7,12 @@ class player_type_1:
         self.name = "player_" + str(number)
         self.variables = {
             "d1": 0,
-            "lambda_p": 0,
+            "lambda_p": 1,
             "r": 0,
-            "Q": 0,
-            "revenue": 0,
+            "Q": 10,
             "max_demand": 0,
             "d_type_1": [0 for i in range(number_of_agent_type_1)],
-            "sum_demand_type_1": 0,
+            "sum_another_demand_type_1": 0,
             "t": 1,
             "type": 1,
         }
@@ -27,16 +26,16 @@ class player_type_1:
         print("Agent program: ")
         print("Agent type: ", self.variables["type"])
         print("max d1")
-        print("subject to: ", "lambda_f1 * d1 <= " + str(self.variables["revenue"]))
+        print("subject to: ", "lambda_f1 * d1 <= " + str(self.variables["r"]))
         print("d1 <= " + str(self.variables["max_demand"]))
         if self.variables["type"] == 1:
-            print("sum_demand_type_1 + 1/t <= " + "Q")
+            print("sum_another_demand_type_1 + 1/t <= " + "Q")
         else:
-            print("sum_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
+            print("sum_another_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
 
     def make_instance(self):
         self.instance = {
-            self.name: {
+            None: {
                 "r": {None: self.variables["r"]},
                 "lambda_p": {None: self.variables["lambda_p"]},
                 "Q": {None: self.variables["Q"]},
@@ -46,7 +45,9 @@ class player_type_1:
                     i: self.variables["d_type_1"][i]
                     for i in range(len(self.variables["d_type_1"]))
                 },
-                "sum_demand_type_1": {None: self.variables["sum_demand_type_1"]},
+                "sum_another_demand_type_1": {
+                    None: self.variables["sum_another_demand_type_1"]
+                },
             }
         }
 

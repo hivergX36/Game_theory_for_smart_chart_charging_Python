@@ -19,4 +19,6 @@ game_controller.make_instance()
 game_controller.print_instance()
 
 model_type_1 = Player_abstract_model_type_1()
+print(game_controller.agent_list_type_1[0].instance)
 model_type_1.run_model(game_controller.agent_list_type_1[0].instance)
+model_type_1.run_model(game_controller.agent_list_type_1[1].instance)

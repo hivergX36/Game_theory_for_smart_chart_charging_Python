@@ -14,9 +14,9 @@ class Player_abstract_model_type_1:
         print("subject to: ", "lambda_f1 * d1 <= " + str(self.program["revenue"]))
         print("d1 <= " + str(self.program["max_demand"]))
         if self.program["type"] == 1:
-            print("sum_demand_type_1 + 1/t <= " + "Q")
+            print("sum_another_demand_type_1 + 1/t <= " + "Q")
         else:
-            print("sum_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
+            print("sum_another_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
 
     """
 
@@ -30,7 +30,7 @@ class Player_abstract_model_type_1:
         self.model.lambda_p = Param(within=PositiveReals)
         self.model.r = Param(within=PositiveReals)
         self.model.Q = Param(within=PositiveReals)
-        self.model.sum_demand_type_type_1 = Param(within=PositiveReals)
+        self.model.sum_another_demand_type_1 = Param(within=PositiveReals)
         self.model.t = Param(within=PositiveReals)
 
         # Define the decision variables for demand, indexed by players
@@ -38,15 +38,25 @@ class Player_abstract_model_type_1:
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return sum(model.d1)
+            return model.d1
 
         self.model.objective = Objective(rule=objective_rule, sense=maximize)
 
         # Define the revenue constraint: demand * price should be less than or equal to revenue
         def revenue_rule(model, p):
-            return model.d1 * model.lambda_p <= model.Q
+            return model.d1 * model.lambda_p <= model.r
 
         self.model.revenue_constraint = Constraint(rule=revenue_rule)
+
+        def model_time_constraint(model):
+            return (
+                model.sum_another_demand_type_1
+                + model.sum_another_demand_type_2
+                + 1 / model.t
+                <= model.Q
+            )
+
+        self.model.time_constraint = Constraint(rule=model_time_constraint)
 
     def run_model(self, data):
 
@@ -59,4 +69,4 @@ class Player_abstract_model_type_1:
         # Solve the model
         solver.solve(instance)
         print("Results for Player 1:")
-        instance.demand.pprint()
+        instance.d1.pprint()
