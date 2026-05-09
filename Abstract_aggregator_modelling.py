@@ -5,53 +5,51 @@ class Aggregator_abstract_model:
 
     def __init__(self):
         self.aggregator_model = AbstractModel()
-        self.quantity = Var(within=PositiveReals)
-        self.min_quantity = Param(within=PositiveReals)
-        self.max_quantity = Param(within=PositiveReals)
-        self.agent_demand_set = Set()
-        self.agent_demand = Param(self.agent_demand_set, within=PositiveReals)
+        self.aggregator_model.Q1 = Var(within=PositiveReals)
+        self.aggregator_model.Q2 = Var(within=PositiveReals)
+        self.aggregator_model.price_1 = Param(within=PositiveReals)
+        self.aggregator_model.price_2 = Param(within=PositiveReals)
+        self.aggregator_model.Min_Q = Param(within=PositiveReals)
+        self.aggregator_model.Max_Q = Param(within=PositiveReals)
+        self.aggregator_model.Sum_demand = Param(within=PositiveReals)
+        self.aggregator_model.Sum_demand_type_1 = Param(within=PositiveReals)
+        self.aggregator_model.Sum_demand_type_2 = Param(within=PositiveReals)
 
         # define objective function
 
         def objective_rule(aggregator_model):
-            return aggregator_model.quantity
+            return (
+                aggregator_model.Q1
+                + aggregator_model.Q2
+                + aggregator_model.price_1
+                * (aggregator_model.Q1 - aggregator_model.Sum_demand_type_1)
+                + aggregator_model.price_2
+                * (aggregator_model.Q2 - aggregator_model.Sum_demand_type_2)
+            )
 
         self.aggregator_model.objective = Objective(rule=objective_rule, sense=minimize)
 
-        # Define revenue constraint
+        # Define quantity sup
 
-        def constraint_revenue_rule(model_aggregator):
-            return (
-                model_aggregator.agent_demand[model_aggregator.agent_demand_set]
-                <= model_aggregator.quantity
-            )
+        def constraint_sup_quantity_rule(aggregator_model):
+            return aggregator_model.Q1 + aggregator_model.Q2 <= aggregator_model.Max_Q
 
-        self.model_aggregator.constraint_revenue = Constraint(
-            rule=constraint_revenue_rule
-        )
-
-        # Define quantity constraints
-
-        def constraint_sup_quantity_rule(model_aggregator):
-            return model_aggregator.quantity <= model_aggregator.max_quantity
-
-        self.model_aggregator.constraint_sup_quantity = Constraint(
+        self.aggregator_model.constraint_debit = Constraint(
             rule=constraint_sup_quantity_rule
         )
 
-        def constraint_inf_quantity_rule(model_aggregator):
-            return model_aggregator.quantity >= model_aggregator.min_quantity
+        def constraint_inf_quantity_rule(aggregator_model):
+            return aggregator_model.Q1 + aggregator_model.Q2 >= aggregator_model.Min_Q
 
-        self.model_aggregator.constraint_inf_quantity = Constraint(
+        self.aggregator_model.constraint_inf_quantity = Constraint(
             rule=constraint_inf_quantity_rule
         )
 
-        def constraint_demand_quantity_rule(model_aggregator):
-            return model_aggregator.quantity >= sum(
-                model_aggregator.agent_demand[i]
-                for i in model_aggregator.agent_demand_set
+        def constraint_priority_demand(aggregator_model):
+            return aggregator_model.Q1 + aggregator_model.Sum_demand_type_1 >= sum(
+                aggregator_model.Q2 - aggregator_model.Sum_demand_type_2
             )
 
-        self.model_aggregator.constraint_quantity_distributed = Constraint(
-            rule=constraint_demand_quantity_rule
+        self.aggregator_model.constraint_priority_demand = Constraint(
+            rule=constraint_priority_demand
         )

@@ -30,6 +30,9 @@ class aggregator:
                 "Q": {None: self.variables["Q"]},
                 "Max_Q": {None: self.variables["Max_Q"]},
                 "Min_Q": {None: self.variables["Min_Q"]},
+                "Sum_demand_type_1": {None: self.variables["Sum_demand_type_1"]},
+                "Sum_demand_type_2": {None: self.variables["Sum_demand_type_2"]},
+                "Sum_demand": {None: self.variables["Sum_demand"]},
             }
         }
 
