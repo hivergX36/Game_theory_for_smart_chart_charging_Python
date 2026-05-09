@@ -5,11 +5,12 @@ class aggregator:
     """
 
     def __init__(self):
-        self.instance = {
+        self.variables = {
             "Q": 0,
             "Max_Q": 0,
             "Min_Q": 0,
         }
+        self.instance = {}
 
     def display_aggregator_variables(self):
         print(self.instance)
@@ -19,3 +20,13 @@ class aggregator:
         print("min Q")
         print("subject to: ", "Q <= " + str(self.instance["Max_Q"]))
         print("Q >= " + str(self.instance["Min_Q"]))
+
+    def make_instance(self):
+        self.instance = {
+            "Q": {None: self.variables["Q"]},
+            "Max_Q": {None: self.variables["Max_Q"]},
+            "Min_Q": {None: self.variables["Min_Q"]},
+        }
+
+    def print_instance(self):
+        print(self.instance)
