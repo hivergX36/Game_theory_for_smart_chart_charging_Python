@@ -34,13 +34,21 @@ class Player_abstract_model_type_2:
         self.model.sum_another_demand_type_1 = Param(within=PositiveReals)
         self.model.sum_another_demand_type_2 = Param(within=PositiveReals)
         self.model.t = Param(within=PositiveReals)
+        self.model.max_demand = Param(within=PositiveReals)
+        self.model.waiting_price = Param(within=PositiveReals)
 
         # Define the decision variables for demand, indexed by players
         self.model.d1 = Var(within=NonNegativeReals)
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return model.d1
+            return model.d1 - self.model.waiting_price * (
+                model.d1
+                + model.sum_another_demand_type_1
+                + model.sum_another_demand_type_2
+                + 1 / model.t
+                - model.Q
+            )
 
         self.model.objective = Objective(rule=objective_rule, sense=maximize)
 
@@ -50,15 +58,10 @@ class Player_abstract_model_type_2:
 
         self.model.revenue_constraint = Constraint(rule=revenue_rule)
 
-        def model_time_constraint(model):
-            return (
-                model.sum_another_demand_type_1
-                + model.sum_another_demand_type_2
-                + 1 / model.t
-                <= model.Q
-            )
+        def model_demand_constraint(model):
+            return model.d1 <= model.max_demand
 
-        self.model.time_constraint = Constraint(rule=model_time_constraint)
+        self.model.demand_constraint = Constraint(rule=model_demand_constraint)
 
         def run_model(self, data):
             instance = self.model.create_instance(data)

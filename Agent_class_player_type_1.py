@@ -13,6 +13,7 @@ class player_type_1:
             "max_demand": 0,
             "d_type_1": [0 for i in range(number_of_agent_type_1)],
             "sum_another_demand_type_1": 0,
+            "waiting_price": 0,
             "t": 1,
             "type": 1,
         }

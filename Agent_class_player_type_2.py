@@ -18,6 +18,7 @@ class player_type_2:
             "d_type_2": [0 for i in range(number_of_agent_type_2)],
             "sum_another_demand_type_2": 0,
             "quantity_given_aggregator": 0,
+            "waiting_price": 0,
             "t": 1,
             "type": 2,
         }
