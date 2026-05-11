@@ -13,6 +13,10 @@ Epsilon = 10 ^ -6
 step = 0.01
 eps = 1
 num_iter = 0
+demand_all_player_type_1 = [0 for i in range(10)]
+demand_all_player_type_2 = [0 for i in range(10)]
+sum_demand_type_1 = 0
+sum_demand_type_2 = 0
 
 # Create and run the model
 game_controller = controler(number_of_agent_type_1=10, number_of_agent_type_2=10)
@@ -26,13 +30,23 @@ model_type_1 = Player_abstract_model_type_1()
 model_type_2 = Player_abstract_model_type_2()
 
 while eps > Epsilon and num_iter < NUMBER_ITER:
-    for agent in game_controller.agent_list_type_1:
-        agent.make_instance()
+
+    # Creater instance for each player and run the model for each player
+
+    game_controller.make_player_instance()
+
+    # Run model for each player and update the demand variable for each player
+
+    for i, agent in enumerate(game_controller.agent_list_type_1):
         model_type_1.run_model(agent.instance)
-    for agent in game_controller.agent_list_type_2:
-        agent.make_instance()
+        agent.variables["d"] = model_type_1.player_solution
+    for i, agent in enumerate(game_controller.agent_list_type_2):
         model_type_2.run_model(agent.instance)
-    for 
+        agent.variables["d"] = model_type_2.player_solution
+    game_controller.aggregator.get_all_demand(
+        game_controller.agent_list_type_1, game_controller.agent_list_type_2
+    )
+
     game_controller.aggregator.make_instance(
         game_controller.agent_list_type_1, game_controller.agent_list_type_2
     )

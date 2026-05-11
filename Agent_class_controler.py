@@ -16,11 +16,19 @@ class controler:
             for i in range(number_of_agent_type_2)
         ]
         self.aggregator = aggregator()
+        self.demand_list_type_1 = [0 for i in range(number_of_agent_type_1)]
+        self.demand_list_type_2 = [0 for i in range(number_of_agent_type_2)]
+        self.demand_all_player = [
+            0 for i in range(number_of_agent_type_1 + number_of_agent_type_2)
+        ]
+        self.sum_demand_all_player_type_1 = 0
+        self.sum_demand_all_player_type_2 = 0
+        self.sum_demand_all_player = 0
 
     def read_data_player_type_1(self, text: str):
         index_word = 0
         dictionnary_word = [
-            "d1",
+            "d",
             "lambda_f",
             "r",
             "max_demand",
@@ -47,7 +55,7 @@ class controler:
     def read_data_player_type_2(self, text: str):
         index_word = 0
         dictionnary_word = [
-            "d1",
+            "d",
             "lambda_f",
             "r",
             "revenue",
@@ -96,6 +104,35 @@ class controler:
                         self.aggregator.instance[w] = float(parsed_lines[index_float])
         print("lines: ", lines)
 
+    def update_demand_list(self):
+        for i in range(len(self.agent_list_type_1)):
+            self.demand_list_type_1[i] = self.agent_list_type_1[i].variables["d"]
+        for i in range(len(self.agent_list_type_2)):
+            self.demand_list_type_2[i] = self.agent_list_type_2[i].variables["d"]
+        for i in range(len(self.demand_all_player)):
+            if i < len(self.agent_list_type_1):
+                self.demand_all_player[i] = self.demand_list_type_1[i]
+            else:
+                self.demand_all_player[i] = self.demand_list_type_2[
+                    i - len(self.agent_list_type_1)
+                ]
+        self.sum_demand_all_player_type_1 = sum(self.demand_list_type_1)
+        self.sum_demand_all_player_type_2 = sum(self.demand_list_type_2)
+        self.sum_demand_all_player = sum(self.demand_all_player)
+
+    def update_annother_demand_type_for_each_player(self):
+        for i in range(len(self.agent_list_type_1)):
+            self.agent_list_type_1[i].variables["sum_another_demand_type_1"] = (
+                self.sum_demand_all_player_type_1 - self.demand_list_type_1[i]
+            )
+        for i in range(len(self.agent_list_type_2)):
+            self.agent_list_type_2[i].variables["sum_another_demand_type_2"] = (
+                self.sum_demand_all_player_type_2 - self.demand_list_type_2[i]
+            )
+
+    def update_aggregator_variables(self):
+        self.aggregator.instance["sum_demand"] = sum(self.demand_all_player)
+
     def print_controler(self):
         for agent in self.agent_list_type_1:
             print("Agent Name: ", agent.name)
@@ -111,11 +148,13 @@ class controler:
         print("-----------------------")
         print("Aggregator programs: ", self.aggregator.display_aggregator_programs())
 
-    def make_instance(self):
+    def make_player_instance(self):
         for agent in self.agent_list_type_1:
             agent.make_instance()
         for agent in self.agent_list_type_2:
             agent.make_instance()
+
+    def make_aggregator_instance(self):
         self.aggregator.make_instance()
 
     def print_instance(self):

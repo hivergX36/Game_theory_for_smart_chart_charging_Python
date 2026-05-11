@@ -22,6 +22,7 @@ class Player_abstract_model_type_1:
 
     def __init__(self):
         # Create the abstract model
+        self.player_solution = 0
         self.model = AbstractModel()
 
         # Define the sets
@@ -69,3 +70,4 @@ class Player_abstract_model_type_1:
         solver.solve(instance)
         print("Results for Player 1:")
         instance.d1.pprint()
+        self.player_solution = instance.d1
