@@ -7,7 +7,7 @@ from Abstract_player_modelling_type_2 import Player_abstract_model_type_2
 from Agent_class_controler import controler
 
 # Sample data for players, prices, and revenues
-NUMBER_ITER = 1
+NUMBER_ITER = 3
 Epsilon = 10 ^ -6
 
 # Admm criteria
@@ -20,7 +20,7 @@ sum_demand_type_1 = 0
 sum_demand_type_2 = 0
 
 # Create and run the model
-game_controller = controler(number_of_agent_type_1=10, number_of_agent_type_2=10)
+game_controller = controler(number_of_agent_type_1=10, number_of_agent_type_2=10,rho: 0.02,mu: 0.02)
 game_controller.read_data_player_type_1("data_player_type_1.txt")
 game_controller.read_data_player_type_2("data_player_type_2.txt")
 game_controller.read_data_aggregator("data_aggregator.txt")
@@ -54,9 +54,20 @@ while eps > Epsilon and num_iter < NUMBER_ITER:
 
     game_controller.make_aggregator_instance()
     model_aggregator.run_model(game_controller.aggregator.instance)
+    game_controller.aggregator.variables["Q1"] = model_aggregator.Q1_solution
+    game_controller.aggregator.variables["Q2"] = model_aggregator.Q2_solution
+    print("Aggregator Q1: ", game_controller.aggregator.variables["Q1"])
+    print("Aggregator Q2: ", game_controller.aggregator.variables["Q2"])
+    game_controller.update_annother_demand_type_for_each_player()
+    game_controller.update_aggregator_price()
+    game_controller.update_player_type_price()
+    
 
-    for i, agent in enumerate(game_controller.agent_list_type_1):
-        agent.dislay_solution()
-    for i, agent in enumerate(game_controller.agent_list_type_2):
-        agent.dislay_solution()
-    aggregator.dislay_solution()
+
+# Display results for each player and the aggregator
+
+for i, agent in enumerate(game_controller.agent_list_type_1):
+    agent.dislay_solution()
+for i, agent in enumerate(game_controller.agent_list_type_2):
+    agent.dislay_solution()
+game_controller.aggregator.dislay_solution()

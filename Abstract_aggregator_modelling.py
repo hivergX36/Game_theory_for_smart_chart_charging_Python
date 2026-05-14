@@ -64,5 +64,5 @@ class Aggregator_abstract_model:
         print("Results for Aggregator:")
         instance.Q1.pprint()
         instance.Q2.pprint()
-        self.Q1_solution = instance.Q1
-        self.Q2_solution = instance.Q2
+        self.Q1_solution = instance.Q1.value
+        self.Q2_solution = instance.Q2.value
