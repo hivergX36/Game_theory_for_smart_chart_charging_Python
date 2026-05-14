@@ -2,47 +2,25 @@ from pyomo.environ import *
 
 
 class Player_abstract_model_type_2:
-    """
-    Abstract model for a game with multiple players.
-    Each player has a price and a revenue.
-    """
-
-    """
-    print("Agent name: ", self.name)
-        print("Agent program: ")
-        print("Agent type: ", self.program["type"])
-        print("max d1")
-        print("subject to: ", "lambda_f1 * d1 <= " + str(self.program["revenue"]))
-        print("d1 <= " + str(self.program["max_demand"]))
-        if self.program["type"] == 1:
-            print("sum_demand_type_1 + 1/t <= " + "Q")
-        else:
-            print("sum_demand_type_1 +sum_demand_type_2 + 1/t <= " + "Q")
-
-    """
 
     def __init__(self):
-        # Create the abstract model
+        self.player_solution = 0
         self.model = AbstractModel()
-
-        # Define the sets
-
-        # Define the parameters for price and revenue for each player
-        self.model.lambda_p = Param(within=PositiveReals)
-        self.model.r = Param(within=PositiveReals)
-        self.model.Q = Param(within=PositiveReals)
-        self.model.sum_another_demand_type_1 = Param(within=PositiveReals)
-        self.model.sum_another_demand_type_2 = Param(within=PositiveReals)
-        self.model.t = Param(within=PositiveReals)
-        self.model.max_demand = Param(within=PositiveReals)
-        self.model.waiting_price = Param(within=PositiveReals)
+        self.model.lambda_p = Param(within=NonNegativeReals)
+        self.model.r = Param(within=NonNegativeReals)
+        self.model.Q = Param(within=NonNegativeReals)
+        self.model.sum_another_demand_type_1 = Param(within=NonNegativeReals)
+        self.model.sum_another_demand_type_2 = Param(within=NonNegativeReals)
+        self.model.t = Param(within=NonNegativeReals)
+        self.model.max_demand = Param(within=NonNegativeReals)
+        self.model.waiting_price = Param(within=NonNegativeReals)
 
         # Define the decision variables for demand, indexed by players
         self.model.d1 = Var(within=NonNegativeReals)
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return model.d1 - self.model.waiting_price * (
+            return model.d1 - model.waiting_price * (
                 model.d1
                 + model.sum_another_demand_type_1
                 + model.sum_another_demand_type_2
@@ -63,12 +41,13 @@ class Player_abstract_model_type_2:
 
         self.model.demand_constraint = Constraint(rule=model_demand_constraint)
 
-        def run_model(self, data):
-            instance = self.model.create_instance(data)
-            instance.pprint()
-            # Solver setup (GLPK is used here)
-            solver = SolverFactory("glpk")
-            # Solve the model
-            solver.solve(instance)
-            print("Results for Player 2:")
-            instance.d1.pprint()
+    def run_model(self, data):
+        instance = self.model.create_instance(data)
+        instance.pprint()
+        # Solver setup (GLPK is used here)
+        solver = SolverFactory("glpk")
+        # Solve the model
+        solver.solve(instance)
+        print("Results for Player 2:")
+        instance.d1.pprint()
+        self.player_solution = instance.d1.value

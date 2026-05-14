@@ -31,6 +31,7 @@ class controler:
             "d",
             "lambda_f",
             "r",
+            "waiting_price",
             "max_demand",
             "sum_demand_type_1",
             "Q",
@@ -60,6 +61,7 @@ class controler:
             "r",
             "revenue",
             "max_demand",
+            "waiting_price",
             "sum_demand_type_1",
             "sum_demand_type_2",
             "Q",
@@ -153,6 +155,16 @@ class controler:
             agent.make_instance()
         for agent in self.agent_list_type_2:
             agent.make_instance()
+
+    def player_instance(self):
+        for agent in self.agent_list_type_1:
+            print("Agent Name: ", agent.name)
+            print("Agent instance: ", agent.print_instance())
+            print("-----------------------")
+        for agent in self.agent_list_type_2:
+            print("Agent Name: ", agent.name)
+            print("Agent instance: ", agent.print_instance())
+            print("-----------------------")
 
     def make_aggregator_instance(self):
         self.aggregator.make_instance()

@@ -31,17 +31,17 @@ class Player_abstract_model_type_1:
         self.model.lambda_p = Param(within=PositiveReals)
         self.model.r = Param(within=PositiveReals)
         self.model.Q = Param(within=PositiveReals)
-        self.model.sum_another_demand_type_1 = Param(within=PositiveReals)
+        self.model.sum_another_demand_type_1 = Param(within=NonNegativeReals)
         self.model.t = Param(within=PositiveReals)
-        self.model.waiting_price = Param(within=PositiveReals)
-        self.model.max_demand = Param(within=PositiveReals)
+        self.model.waiting_price = Param(within=NonNegativeReals)
+        self.model.max_demand = Param(within=NonNegativeReals)
 
         # Define the decision variables for demand, indexed by players
         self.model.d1 = Var(within=NonNegativeReals)
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return model.d1 - self.model.waiting_price * (
+            return model.d1 - model.waiting_price * (
                 model.d1 + model.sum_another_demand_type_1 + 1 / model.t - model.Q
             )
 
@@ -70,4 +70,4 @@ class Player_abstract_model_type_1:
         solver.solve(instance)
         print("Results for Player 1:")
         instance.d1.pprint()
-        self.player_solution = instance.d1
+        self.player_solution = instance.d1.value

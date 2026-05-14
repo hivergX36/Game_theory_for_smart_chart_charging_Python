@@ -6,7 +6,7 @@ class player_type_1:
     def __init__(self, number: int, number_of_agent_type_1: int):
         self.name = "player_" + str(number)
         self.variables = {
-            "d1": 0,
+            "d": 0,
             "lambda_p": 1,
             "r": 0,
             "Q": 10,
@@ -26,9 +26,9 @@ class player_type_1:
         print("Agent name: ", self.name)
         print("Agent program: ")
         print("Agent type: ", self.variables["type"])
-        print("max d1")
-        print("subject to: ", "lambda_f1 * d1 <= " + str(self.variables["r"]))
-        print("d1 <= " + str(self.variables["max_demand"]))
+        print("max d")
+        print("subject to: ", "lambda_f1 * d <= " + str(self.variables["r"]))
+        print("d <= " + str(self.variables["max_demand"]))
         if self.variables["type"] == 1:
             print("sum_another_demand_type_1 + 1/t <= " + "Q")
         else:
@@ -42,6 +42,8 @@ class player_type_1:
                 "Q": {None: self.variables["Q"]},
                 "r ": {None: self.variables["r"]},
                 "t": {None: self.variables["t"]},
+                "max_demand": {None: self.variables["max_demand"]},
+                "waiting_price": {None: self.variables["waiting_price"]},
                 "d_type_1": {
                     i: self.variables["d_type_1"][i]
                     for i in range(len(self.variables["d_type_1"]))
@@ -54,3 +56,8 @@ class player_type_1:
 
     def print_instance(self):
         print(self.instance)
+
+    def dislay_solution(self):
+        print("Results for ", self.name, ":")
+        print("d: ", self.variables["d"])
+        print("lambda_p: ", self.variables["lambda_p"])

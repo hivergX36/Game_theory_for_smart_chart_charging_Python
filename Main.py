@@ -1,3 +1,4 @@
+from Abstract_aggregator_modelling import Aggregator_abstract_model
 from Agent_class_aggregator import aggregator
 from Agent_class_player_type_1 import player_type_1
 from Agent_class_player_type_2 import player_type_2
@@ -6,7 +7,7 @@ from Abstract_player_modelling_type_2 import Player_abstract_model_type_2
 from Agent_class_controler import controler
 
 # Sample data for players, prices, and revenues
-NUMBER_ITER = 50
+NUMBER_ITER = 1
 Epsilon = 10 ^ -6
 
 # Admm criteria
@@ -28,26 +29,34 @@ game_controller.read_data_aggregator("data_aggregator.txt")
 
 model_type_1 = Player_abstract_model_type_1()
 model_type_2 = Player_abstract_model_type_2()
+model_aggregator = Aggregator_abstract_model()
 
 while eps > Epsilon and num_iter < NUMBER_ITER:
 
     # Creater instance for each player and run the model for each player
-
+    num_iter += 1
     game_controller.make_player_instance()
+    game_controller.player_instance()
 
     # Run model for each player and update the demand variable for each player
 
     for i, agent in enumerate(game_controller.agent_list_type_1):
         model_type_1.run_model(agent.instance)
         agent.variables["d"] = model_type_1.player_solution
+        print("Player type 1: ", agent.name, "d: ", agent.variables["d"])
     for i, agent in enumerate(game_controller.agent_list_type_2):
         model_type_2.run_model(agent.instance)
         agent.variables["d"] = model_type_2.player_solution
+        print("Player type 2: ", agent.name, "d: ", agent.variables["d"])
     game_controller.aggregator.get_all_demand(
         game_controller.agent_list_type_1, game_controller.agent_list_type_2
     )
 
-    game_controller.aggregator.make_instance(
-        game_controller.agent_list_type_1, game_controller.agent_list_type_2
-    )
-    game_controller.aggregator.run_model()
+    game_controller.make_aggregator_instance()
+    model_aggregator.run_model(game_controller.aggregator.instance)
+
+    for i, agent in enumerate(game_controller.agent_list_type_1):
+        agent.dislay_solution()
+    for i, agent in enumerate(game_controller.agent_list_type_2):
+        agent.dislay_solution()
+    aggregator.dislay_solution()
