@@ -28,12 +28,13 @@ class Player_abstract_model_type_1:
         # Define the sets
 
         # Define the parameters for price and revenue for each player
-        self.model.lambda_p = Param(within=NonNegativeReals)
+        self.model.lambda_price_1 = Param(within=Reals)
         self.model.r = Param(within=NonNegativeReals)
         self.model.Q = Param(within=NonNegativeReals)
+        self.model.Q1 = Param(within=NonNegativeReals)
         self.model.sum_another_demand_type_1 = Param(within=NonNegativeReals)
         self.model.t = Param(within=PositiveReals)
-        self.model.waiting_price = Param(within=NonNegativeReals)
+        self.model.waiting_price = Param(within=Reals)
         self.model.max_demand = Param(within=NonNegativeReals)
 
         # Define the decision variables for demand, indexed by players
@@ -41,15 +42,18 @@ class Player_abstract_model_type_1:
 
         # Define the objective: maximize total demand across all players
         def objective_rule(model):
-            return model.d1 - model.waiting_price * (
-                model.d1 + model.sum_another_demand_type_1 + 1 / model.t - model.Q
+            return (
+                model.d1
+                - model.waiting_price
+                * (model.d1 + model.sum_another_demand_type_1 + 1 / model.t - model.Q)
+                - model.lambda_price_1 * (model.d1 - model.Q1)
             )
 
         self.model.objective = Objective(rule=objective_rule, sense=maximize)
 
         # Define the revenue constraint: demand * price should be less than or equal to revenue
         def revenue_rule(model, p):
-            return model.d1 * model.lambda_p <= model.r
+            return model.d1 * model.lambda_price_1 <= model.r
 
         self.model.revenue_constraint = Constraint(rule=revenue_rule)
 
