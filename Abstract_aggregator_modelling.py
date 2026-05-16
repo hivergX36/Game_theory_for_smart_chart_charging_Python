@@ -7,8 +7,6 @@ class Aggregator_abstract_model:
         self.model = AbstractModel()
         self.Q1_solution = 0
         self.Q2_solution = 0
-        self.model.Q1 = 0
-        self.model.Q2 = 0
         self.model.Q1 = Var(within=NonNegativeReals)
         self.model.Q2 = Var(within=NonNegativeReals)
         self.model.price_1 = Param(within=Reals)
@@ -25,8 +23,8 @@ class Aggregator_abstract_model:
             return (
                 model.Q1
                 + model.Q2
-                + model.price_1 * (model.Sum_demand_type_1 - model.Q1)
-                + model.price_2 * (model.Sum_demand_type_2 - model.Q2)
+                + model.price_1 * (-model.Q1 + model.Sum_demand_type_1)
+                + model.price_2 * (-model.Q2 + model.Sum_demand_type_2)
             )
 
         self.model.objective = Objective(rule=objective_rule, sense=minimize)
@@ -38,11 +36,18 @@ class Aggregator_abstract_model:
 
         self.model.constraint_debit = Constraint(rule=constraint_sup_quantity_rule)
 
-        def constraint_inf_quantity_rule(model):
-            return model.Q1 + model.Q2 >= model.Min_Q
+        def constraint_inf_quantity_rule_type_1(model):
+            return model.Q1 >= model.Min_Q
 
-        self.model.constraint_inf_quantity = Constraint(
-            rule=constraint_inf_quantity_rule
+        self.model.constraint_inf_quantity_type_1 = Constraint(
+            rule=constraint_inf_quantity_rule_type_1
+        )
+
+        def constraint_inf_quantity_rule_type_2(model):
+            return model.Q2 >= model.Min_Q
+
+        self.model.constraint_inf_quantity_type_2 = Constraint(
+            rule=constraint_inf_quantity_rule_type_2
         )
 
         def constraint_priority_demand(model):
