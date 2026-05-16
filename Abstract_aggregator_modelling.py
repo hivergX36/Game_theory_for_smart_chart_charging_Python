@@ -11,8 +11,8 @@ class Aggregator_abstract_model:
         self.model.Q2 = 0
         self.model.Q1 = Var(within=NonNegativeReals)
         self.model.Q2 = Var(within=NonNegativeReals)
-        self.model.price_1 = Param(within=NonNegativeReals)
-        self.model.price_2 = Param(within=NonNegativeReals)
+        self.model.price_1 = Param(within=Reals)
+        self.model.price_2 = Param(within=Reals)
         self.model.Min_Q = Param(within=NonNegativeReals)
         self.model.Max_Q = Param(within=NonNegativeReals)
         self.model.Sum_demand = Param(within=NonNegativeReals)

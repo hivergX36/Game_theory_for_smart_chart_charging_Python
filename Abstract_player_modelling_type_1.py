@@ -28,9 +28,9 @@ class Player_abstract_model_type_1:
         # Define the sets
 
         # Define the parameters for price and revenue for each player
-        self.model.lambda_p = Param(within=PositiveReals)
-        self.model.r = Param(within=PositiveReals)
-        self.model.Q = Param(within=PositiveReals)
+        self.model.lambda_p = Param(within=NonNegativeReals)
+        self.model.r = Param(within=NonNegativeReals)
+        self.model.Q = Param(within=NonNegativeReals)
         self.model.sum_another_demand_type_1 = Param(within=NonNegativeReals)
         self.model.t = Param(within=PositiveReals)
         self.model.waiting_price = Param(within=NonNegativeReals)

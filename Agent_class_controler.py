@@ -6,7 +6,13 @@ from Agent_class_aggregator import aggregator
 
 class controler:
 
-    def __init__(self, number_of_agent_type_1: int, number_of_agent_type_2: int, rho: float, mu: float):
+    def __init__(
+        self,
+        number_of_agent_type_1: int,
+        number_of_agent_type_2: int,
+        rho: float,
+        mu: float,
+    ):
         self.agent_list_type_1 = [
             player_type_1(i, number_of_agent_type_1)
             for i in range(number_of_agent_type_1)
@@ -28,7 +34,7 @@ class controler:
         self.sum_demand_all_player_type_2 = 0
         self.sum_demand_all_player = 0
         self.rho = rho
-        self.mu 
+        self.mu = mu
 
     def read_data_player_type_1(self, text: str):
         index_word = 0
@@ -111,7 +117,7 @@ class controler:
                         self.aggregator.instance[w] = float(parsed_lines[index_float])
         print("lines: ", lines)
 
-    def update_demand_list(self):
+    def update_demand_all_list_with_sum(self):
         for i in range(len(self.agent_list_type_1)):
             self.demand_list_type_1[i] = self.agent_list_type_1[i].variables["d"]
         for i in range(len(self.agent_list_type_2)):
@@ -124,8 +130,17 @@ class controler:
                     i - len(self.agent_list_type_1)
                 ]
         self.sum_demand_all_player_type_1 = sum(self.demand_list_type_1)
+        print("sum demand type 1: ", self.sum_demand_all_player_type_1)
         self.sum_demand_all_player_type_2 = sum(self.demand_list_type_2)
+        print("sum demand type 2: ", self.sum_demand_all_player_type_2)
         self.sum_demand_all_player = sum(self.demand_all_player)
+        self.aggregator.variables["Sum_demand_type_1"] = (
+            self.sum_demand_all_player_type_1
+        )
+        self.aggregator.variables["Sum_demand_type_2"] = (
+            self.sum_demand_all_player_type_2
+        )
+        self.aggregator.variables["Sum_demand"] = self.sum_demand_all_player
 
     def update_annother_demand_type_for_each_player(self):
         for i in range(len(self.agent_list_type_1)):
@@ -134,24 +149,50 @@ class controler:
             )
         for i in range(len(self.agent_list_type_2)):
             self.agent_list_type_2[i].variables["sum_another_demand_type_2"] = (
-                self.sum_demand_all_player_type_2 +  self.sum_demand_all_player_type_1  - self.demand_list_type_2[i]
+                self.sum_demand_all_player_type_2
+                + self.sum_demand_all_player_type_1
+                - self.demand_list_type_2[i]
             )
 
     def update_aggregator_variables(self):
         self.aggregator.instance["sum_demand"] = sum(self.demand_all_player)
-        
+
     def update_aggregator_price(self):
-        self.aggregator.variable["price_1"] = self.aggregator.variable["price_1"] +  self.rho * (self.sum_demand_all_player_type_1 -  self.aggregator.variable["Q1"])
-        self.aggregator.variable["price_2"] = self.aggregator.variable["price_1"] +  self.rho * (self.sum_demand_all_player_type_2 -  self.aggregator.variable["Q2"])
-        
+        self.aggregator.variables["price_1"] = self.aggregator.variables[
+            "price_1"
+        ] + self.rho * (
+            self.sum_demand_all_player_type_1 - self.aggregator.variables["Q1"]
+        )
+        self.aggregator.variables["price_2"] = self.aggregator.variables[
+            "price_1"
+        ] + self.rho * (
+            self.sum_demand_all_player_type_2 - self.aggregator.variables["Q2"]
+        )
+
     def update_player_type_price(self):
-        for i, agent in enumerate(game_controller.agent_list_type_1):
-            agent.variables["waiting_price"] =  agent.variables["waiting_price"] + rho/ self.number_agent_type_1 +  agent.variables["sum_another_demand_type_1"] + (1 / agent.variables["t"]) - self.aggregator.variable["Q1"]
-        for i, agent in enumerate(game_controller.agent_list_type_2):
-            agent.variables["waiting_price"] =  agent.variables["waiting_price"] + rho/ self.number_agent_type_1 +  agent.variables["sum_another_demand_type_2"] + (1 / agent.variables["t"]) - self.aggregator.variable["Q2"]
+        for i, agent in enumerate(self.agent_list_type_1):
+            agent.variables["waiting_price"] = (
+                agent.variables["waiting_price"]
+                + self.rho / self.number_agent_type_1
+                + agent.variables["sum_another_demand_type_1"]
+                + (1 / agent.variables["t"])
+                - self.aggregator.variables["Q1"]
+            )
+        for i, agent in enumerate(self.agent_list_type_2):
+            agent.variables["waiting_price"] = (
+                agent.variables["waiting_price"]
+                + self.rho / self.number_agent_type_1
+                + agent.variables["sum_another_demand_type_2"]
+                + (1 / agent.variables["t"])
+                - self.aggregator.variables["Q2"]
+            )
 
-        
+    def update_player_quantity_distributed(self):
+        for i, agent in enumerate(self.agent_list_type_1):
+            agent.variables["Q"] = self.aggregator.variables["Q1"]
 
+        for i, agent in enumerate(self.agent_list_type_2):
+            agent.variables["Q"] = self.aggregator.variables["Q2"]
 
     def print_controler(self):
         for agent in self.agent_list_type_1:

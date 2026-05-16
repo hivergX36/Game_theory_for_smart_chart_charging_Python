@@ -9,7 +9,7 @@ class player_type_1:
             "d": 0,
             "lambda_p": 1,
             "r": 0,
-            "Q": 10,
+            "Q": 0,
             "max_demand": 0,
             "d_type_1": [0 for i in range(number_of_agent_type_1)],
             "sum_another_demand_type_1": 0,
