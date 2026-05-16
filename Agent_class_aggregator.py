@@ -7,13 +7,15 @@ class aggregator:
     def __init__(self):
         self.variables = {
             "Q": 0,
+            "Q1": 0,
+            "Q2": 0,
             "Max_Q": 0,
             "Min_Q": 0,
             "Sum_demand_type_1": 0,
             "Sum_demand_type_2": 0,
             "Sum_demand": 0,
-            "price_1": 0,
-            "price_2": 0,
+            "price_1": 1,
+            "price_2": 1,
         }
         self.instance = {}
 
@@ -41,7 +43,7 @@ class aggregator:
         self.instance = {
             None: {
                 "Q": {None: self.variables["Q"]},
-                "Max_Q": {None: 10},
+                "Max_Q": {None: 12},
                 "Min_Q": {None: self.variables["Min_Q"]},
                 "Sum_demand_type_1": {None: self.variables["Sum_demand_type_1"]},
                 "Sum_demand_type_2": {None: self.variables["Sum_demand_type_2"]},
