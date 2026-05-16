@@ -7,9 +7,11 @@ class player_type_1:
         self.name = "player_" + str(number)
         self.variables = {
             "d": 0,
-            "lambda_p": 1,
             "r": 0,
+            "Q1": 0,
+            "Q2": 0,
             "Q": 0,
+            "lambda_price_1": 0,
             "max_demand": 0,
             "d_type_1": [0 for i in range(number_of_agent_type_1)],
             "sum_another_demand_type_1": 0,
@@ -38,8 +40,10 @@ class player_type_1:
         self.instance = {
             None: {
                 "r": {None: self.variables["r"]},
-                "lambda_p": {None: self.variables["lambda_p"]},
+                "lambda_price_1": {None: self.variables["lambda_price_1"]},
                 "Q": {None: self.variables["Q"]},
+                "Q1": {None: self.variables["Q1"]},
+                "Q2": {None: self.variables["Q2"]},
                 "r ": {None: self.variables["r"]},
                 "t": {None: self.variables["t"]},
                 "max_demand": {None: self.variables["max_demand"]},
@@ -60,4 +64,4 @@ class player_type_1:
     def dislay_solution(self):
         print("Results for ", self.name, ":")
         print("d: ", self.variables["d"])
-        print("lambda_p: ", self.variables["lambda_p"])
+        print("lambda_price_1: ", self.variables["lambda_price_1"])
